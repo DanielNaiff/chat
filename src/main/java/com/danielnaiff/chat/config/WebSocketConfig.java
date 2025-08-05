@@ -12,12 +12,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     //Define o endpoint que os clientes irão usar para se conectar via WebSocket: "/ws"
     //withSockJS() tenta usar WebSocket e, se não conseguir, usa alternativas como long polling
-    public void registerStompEndPoints(StompEndpointRegistry registry){
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws").withSockJS();
     }
 
 
-    public void configurerMessageBroker(MessageBrokerRegistry registry){
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry){
         //Define que mensagens enviadas pelos clientes com prefixo /app serão roteadas para os métodos no servidor anotados com @MessageMapping
         registry.setApplicationDestinationPrefixes("/app");
 
