@@ -1,11 +1,11 @@
-# Usar uma imagem base com JDK 21
+# Etapa 1: build da aplicação com Maven
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Etapa 2: imagem final com o JAR compilado
 FROM eclipse-temurin:21-jdk-alpine
-
-## Criar um volume para arquivos temporários
-#VOLUME /tmp
-
-# Copiar o JAR gerado pelo Maven para o contêiner
-COPY target/chat-0.0.1-SNAPSHOT.jar app.jar
-
-# Definir o comando para executar a aplicação
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
